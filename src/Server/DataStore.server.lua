@@ -56,7 +56,7 @@ Players.PlayerRemoving:Connect(function(player)
         playerCandyCane:UpdateAsync(PlayerKey,function(oldValue)
             local NewValue = CandyCane.Value
                 if oldValue == NewValue then
-                    return oldValue
+                    return nil
                  else
                     return NewValue
                 end
