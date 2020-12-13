@@ -6,7 +6,6 @@ local current = os.time()
 local BodyVelocity
 local MainPart
 local Config
-local BodyGyro
 local connection
 local HoldingW = false
 local HoldingS = false
@@ -89,7 +88,6 @@ Character.Humanoid:GetPropertyChangedSignal("SeatPart"):Connect(function()
 		Looping = false
 	elseif SeatPart.Name == "SleighDriver" then
 		BodyVelocity = SeatPart.Parent:WaitForChild("BodyVelocity")
-		BodyGyro = SeatPart.Parent:WaitForChild("BodyGyro")
 		MainPart = SeatPart.Parent
 		Config = MainPart.Parent.Configuration
 		BindActions()
