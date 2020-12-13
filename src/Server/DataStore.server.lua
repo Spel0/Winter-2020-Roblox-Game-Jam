@@ -1,7 +1,7 @@
 local Players = game:GetService("Players")
 local DataStore = game:GetService("DataStoreService")
 
-local function GetData(Key,CandyLocation)
+local function GetData(Key,CandyLocation) --Get CandyCanes Data
     local count = 0
     local CandyCanes
     local playerCandyCane = DataStore:GetDataStore("CandyCane", Key)
@@ -28,20 +28,34 @@ Players.PlayerAdded:Connect(function(player)
 
     print("New Player Joined: "..PlayerKey..". Trying to load Data!")
 
-    local Loaded = Instance.new("BoolValue")
+    local Loaded = Instance.new("BoolValue") --Data Loaded Bool Value
     Loaded.Name = "DataLoaded"
     Loaded.Parent = player
 
-    local Currency = Instance.new("Folder")
+    local Currency = Instance.new("Folder") --In Game Currency Folder
     Currency.Name = "Currency"
     Currency.Parent = player
 
-    local CandyCane = Instance.new("NumberValue")
+    local CandyCane = Instance.new("NumberValue") --In Game Currency
     CandyCane.Name = "CandyCane"
     CandyCane.Parent = Currency
 
+    local Inventory = Instance.new("Folder") --Inventory Folder
+    Inventory.Name = "Inventory"
+    Inventory.Parent = player
+
+    local PresentFolder = Instance.new("Folder") --Presents Folder
+    PresentFolder.Name = "Presents"
+    PresentFolder.Parent = Inventory
+
+    for i = 1,4 do --Presents Bool Value
+        local Present = Instance.new("BoolValue")
+        Present.Name = "Present"..i
+        Present.Parent = PresentFolder
+    end
+
     local result = GetData(PlayerKey,CandyCane)
-    Loaded.Value = result
+    Loaded.Value = result --In Case of Roblox Being Down don't Save Data
     end)
 
 Players.PlayerRemoving:Connect(function(player)
