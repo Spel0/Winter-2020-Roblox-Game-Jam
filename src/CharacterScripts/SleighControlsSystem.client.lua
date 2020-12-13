@@ -87,7 +87,7 @@ Character.Humanoid:GetPropertyChangedSignal("SeatPart"):Connect(function()
 	if SeatPart == nil then
 		UnBindActions()
 		Looping = false
-	elseif SeatPart.Parent.Parent.Name == "Sleight" then
+	elseif SeatPart.Name == "SleighDriver" then
 		BodyVelocity = SeatPart.Parent:WaitForChild("BodyVelocity")
 		BodyGyro = SeatPart.Parent:WaitForChild("BodyGyro")
 		MainPart = SeatPart.Parent
@@ -101,8 +101,6 @@ Character.Humanoid:GetPropertyChangedSignal("SeatPart"):Connect(function()
                 BodyVelocity.Velocity = MainPart.CFrame.LookVector * Config.AccelerationSpeed.Value
             elseif not Looping then
                 connection:Disconnect()
-            elseif FreeCam then
-                MainPart.CFrame = CFrame.new(MainPart.Position,MainPart.Position + Character.HumanoidRootPart.CFrame.LookVector)
             end
         end)
 end)
