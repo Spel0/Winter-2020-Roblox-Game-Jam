@@ -18,8 +18,8 @@ local function SpeedUp(actionName, inputState, inputObject) --Add Speed when pre
 	else
 		HoldingW = true
 	end
-    repeat
-        local Acceleration = Config.AccelerationSpeed
+	repeat
+		local Acceleration = Config.AccelerationSpeed
 		local Max = Config.MaxSpeed
 		RunService.Heartbeat:Wait()
 		if Acceleration.Value > Max.Value then
@@ -40,8 +40,8 @@ local function SpeedDown(actionName, inputState, inputObject) --Decrease Speed w
 	else
 		HoldingS = true
 	end
-    repeat
-        local Acceleration = Config.AccelerationSpeed
+	repeat
+		local Acceleration = Config.AccelerationSpeed
 		RunService.Heartbeat:Wait()
 		if Acceleration.Value < 0 then
 			Acceleration.Value = 0
@@ -51,17 +51,18 @@ local function SpeedDown(actionName, inputState, inputObject) --Decrease Speed w
 			if Acceleration.Value > 0 then
 				Acceleration.Value -= 15
 			end
-			end
+		end
 	until not HoldingS
 end
 
 local function FreeCamera(actionName, inputState, inputObject) --Free Camera (Simple code, yet very buggy)
-    if inputState == Enum.UserInputState.End or inputState == Enum.UserInputState.Cancel then
-        FreeCam = false
-    else
-        FreeCam = true
-    end
+	if inputState == Enum.UserInputState.End or inputState == Enum.UserInputState.Cancel then
+		FreeCam = false
+	else
+		FreeCam = true
+	end
 end
+
 
 local function BindActions() --CAS actions binding
 	ContextActionService:BindAction("SpeedUp",SpeedUp,true,Enum.KeyCode.W)
@@ -70,11 +71,11 @@ local function BindActions() --CAS actions binding
 
 	ContextActionService:BindAction("SpeedDown",SpeedDown,true,Enum.KeyCode.S)
 	ContextActionService:SetTitle("SpeedDown","Break")
-    ContextActionService:SetPosition("SpeedDown",UDim2.new(0.5,0,0,0))
-    
-    ContextActionService:BindAction("FreeCamera",FreeCamera,true,Enum.KeyCode.C)
-    ContextActionService:SetTitle("FreeCamera","Free Camera")
-    ContextActionService:SetPosition("FreeCamera",UDim2.new(-2,0,0,0))
+	ContextActionService:SetPosition("SpeedDown",UDim2.new(0.5,0,0,0))
+
+	ContextActionService:BindAction("FreeCamera",FreeCamera,true,Enum.KeyCode.C)
+	ContextActionService:SetTitle("FreeCamera","FreeCam")
+	ContextActionService:SetPosition("FreeCamera",UDim2.new(-2,0,0,0))
 end
 
 local function UnBindActions() --CAS Actions unbinding
@@ -95,12 +96,12 @@ Character.Humanoid:GetPropertyChangedSignal("SeatPart"):Connect(function() --Mai
 		BindActions()
 		Looping = true
 	end
-        connection = RunService.Heartbeat:Connect(function() --Sleigh Flying System
-            if not FreeCam and Looping then
-			    MainPart.CFrame = CFrame.new(MainPart.Position,MainPart.Position + workspace.CurrentCamera.CFrame.LookVector)
-                BodyVelocity.Velocity = MainPart.CFrame.LookVector * Config.AccelerationSpeed.Value
-            elseif not Looping then
-                connection:Disconnect()
-            end
-        end)
+	connection = RunService.Heartbeat:Connect(function() --Sleigh Flying System
+		if not FreeCam and Looping then
+			MainPart.CFrame = CFrame.lookAt(MainPart.Position,MainPart.Position + workspace.CurrentCamera.CFrame.LookVector)
+			BodyVelocity.Velocity = MainPart.CFrame.LookVector * Config.AccelerationSpeed.Value
+		elseif not Looping then
+			connection:Disconnect()
+		end
+	end)
 end)
