@@ -2,7 +2,7 @@ local ContextActionService = game:GetService("ContextActionService")
 local Character = script.Parent --Since Script is in StarterCharacterScripts, our Character is already loaded and script is already placed inside of it.
 local RunService = game:GetService("RunService")
 
-local current = os.time() --Debounce
+local current = time() --Debounce
 local BodyVelocity --Various Variables(lol)
 local MainPart
 local Config
@@ -25,8 +25,8 @@ local function SpeedUp(actionName, inputState, inputObject) --Add Speed when pre
 		if Acceleration.Value > Max.Value then
 			Acceleration.Value = 100
 		end
-		if os.time() - current >= 0.5 then
-			current = os.time()
+		if time() - current >= 0.5 then
+			current = time()
 			if Acceleration.Value < Max.Value then
 				Acceleration.Value += 10
 			end
@@ -46,8 +46,8 @@ local function SpeedDown(actionName, inputState, inputObject) --Decrease Speed w
 		if Acceleration.Value < 0 then
 			Acceleration.Value = 0
 		end
-		if os.time() - current >= 0.5 then
-			current = os.time()
+		if time() - current >= 0.5 then
+			current = time()
 			if Acceleration.Value > 0 then
 				Acceleration.Value -= 15
 			end
