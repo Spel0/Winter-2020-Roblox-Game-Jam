@@ -55,7 +55,7 @@ local function SpeedDown(actionName, inputState, inputObject) --Decrease Speed w
 	until not HoldingS
 end
 
-local function FreeCamera(actionName, inputState, inputObject) --Free Camera (Simple code, yet very buggy)
+local function FreeCamera(actionName, inputState, inputObject) --Free Camera (Now without Bugs :D)
 	if inputState == Enum.UserInputState.End or inputState == Enum.UserInputState.Cancel then
 		FreeCam = false
 	else
@@ -96,12 +96,16 @@ Character.Humanoid:GetPropertyChangedSignal("SeatPart"):Connect(function() --Mai
 		BindActions()
 		Looping = true
 	end
+	local X,Y,Z
 	connection = RunService.Heartbeat:Connect(function() --Sleigh Flying System
 		if not FreeCam and Looping then
 			MainPart.CFrame = CFrame.lookAt(MainPart.Position,MainPart.Position + workspace.CurrentCamera.CFrame.LookVector)
+			X,Y,Z = MainPart.CFrame:ToEulerAnglesYXZ()
 			BodyVelocity.Velocity = MainPart.CFrame.LookVector * Config.AccelerationSpeed.Value
 		elseif not Looping then
 			connection:Disconnect()
+		elseif FreeCam then
+			MainPart.CFrame = CFrame.new(MainPart.Position) * CFrame.fromEulerAnglesYXZ(X,Y,Z)
 		end
 	end)
 end)
