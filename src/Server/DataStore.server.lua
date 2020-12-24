@@ -32,6 +32,10 @@ Players.PlayerAdded:Connect(function(player)
     Loaded.Name = "DataLoaded"
     Loaded.Parent = player
 
+    local Pc = Instance.new("BoolValue") --To detect if Player on PC or not
+    Pc.Name = "Pc"
+    Pc.Parent = player
+
     local Currency = Instance.new("Folder") --In Game Currency Folder
     Currency.Name = "Currency"
     Currency.Parent = player
