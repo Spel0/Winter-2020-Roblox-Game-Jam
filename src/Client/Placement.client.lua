@@ -136,7 +136,7 @@ local function CanvasSide()
     end)
     end
 
-while RS.Heartbeat:Wait() do
+--[[while RS.Heartbeat:Wait() do
     if not Binded then
              CAS:BindAction("Bottom",CanvasBottom,true,Enum.KeyCode.B)
              CAS:SetPosition("Bottom",UDim2.new(0.2,0,0.2,0))
@@ -146,4 +146,4 @@ while RS.Heartbeat:Wait() do
             CAS:SetTitle("Side","Side")
             Binded = true
 end
-end
+end--]]

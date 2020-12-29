@@ -1,5 +1,6 @@
 local Players = game:GetService("Players")
 local DataStore = game:GetService("DataStoreService")
+local HouseTable = workspace["Village Area"].Houses:GetChildren()
 
 local function GetData(Key,CandyLocation) --Get CandyCanes Data
     local count = 0
@@ -23,6 +24,21 @@ local function GetData(Key,CandyLocation) --Get CandyCanes Data
     return false
 end
 
+local function AssignHouse(player)
+    while game:GetService("RunService").Heartbeat:Wait() do
+        local RandomNumber = math.random(1,#HouseTable)
+        for i,v in ipairs(HouseTable) do
+            if i == RandomNumber then
+                if not v.Owned.Value then
+                    v.Owned.Value = true
+                    v.Sign.Front.SurfaceGui.Ownage.Text = "Owned by: "..player.Name
+                    return v
+                end
+            end
+        end
+    end
+end
+
 Players.PlayerAdded:Connect(function(player)
     local PlayerKey = "Player_"..player.UserId
 
@@ -35,6 +51,13 @@ Players.PlayerAdded:Connect(function(player)
     local Pc = Instance.new("BoolValue") --To detect if Player on PC or not
     Pc.Name = "Pc"
     Pc.Parent = player
+
+    local House = Instance.new("ObjectValue") --Assign a random House to a Player
+    House.Name = "OwnedHouse"
+    House.Parent = player
+
+    local HouseToClaim = AssignHouse(player)
+    House.Value = HouseToClaim
 
     local Currency = Instance.new("Folder") --In Game Currency Folder
     Currency.Name = "Currency"
@@ -60,6 +83,10 @@ Players.PlayerAdded:Connect(function(player)
 
     local result = GetData(PlayerKey,CandyCane)
     Loaded.Value = result --In Case of Roblox Being Down don't Save Data
+
+    local Letter = Instance.new("BoolValue") --Cashier Job
+    Letter.Name = "HasLetter"
+    Letter.Parent = player
     end)
 
 Players.PlayerRemoving:Connect(function(player)
@@ -67,6 +94,7 @@ Players.PlayerRemoving:Connect(function(player)
     local CandyCane = player.Currency.CandyCane
     local Loaded = player.DataLoaded
     local playerCandyCane = DataStore:GetDataStore("CandyCane", PlayerKey)
+    local House = player.OwnedHouse
 
     --Trying to save CandyCanes Currency
     local success, error = pcall(function()
@@ -86,4 +114,15 @@ Players.PlayerRemoving:Connect(function(player)
     else
         print("An error occured in DataStore Script: "..error)
     end
+
+    House.Value.Owned.Value = false
+    House.Value.Sign.Front.SurfaceGui.Ownage.Text = "Owned by: No one"
 end)
+
+--On Startup Stuff
+local HousesDescendants = workspace["Village Area"].Houses:GetDescendants()
+for _,v in pairs(HousesDescendants) do
+    if v.Name == "Sign" and v:IsA("Model") then
+        v.Front.SurfaceGui.Ownage.Text = "Owned by: No one"
+    end
+end
