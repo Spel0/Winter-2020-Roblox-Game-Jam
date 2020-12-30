@@ -18,7 +18,7 @@ NPCFolder.ChildAdded:Connect(function(NPC)
     Proxy.Triggered:Connect(function(player)
         if player.HasLetter.Value then return end
         player.HasLetter.Value = true
-        local ClonedLetter = game.ReplicatedStorage:FindFirstChild("Letter"):Clone()
+        local ClonedLetter = game.ReplicatedStorage.Tools:FindFirstChild("Letter"):Clone()
         ClonedLetter.Parent = player.Backpack
         coroutine.resume(coroutine.create(function() 
             local Animator = Instance.new("Animator")

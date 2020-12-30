@@ -126,3 +126,5 @@ for _,v in pairs(HousesDescendants) do
         v.Front.SurfaceGui.Ownage.Text = "Owned by: No one"
     end
 end
+
+require(game.ServerScriptService.FactoryItems).StartProduction()

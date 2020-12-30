@@ -3,6 +3,7 @@ local PresentsProxy = workspace["Workshop Area"]["Main Building"].GiftsToGrab.Pr
 local Functions = require(game:GetService("ServerScriptService").Functions)
 local DeliveryFolder = workspace.DeliveryPoints
 local DeliveryEvent = RepStorage.Remotes.DeliveryEvent
+local FactoryItems = require(game.ServerScriptService.FactoryItems)
 
 local function GetPresent(player)
     for i,v in ipairs(player.Inventory.Presents:GetChildren()) do
@@ -21,6 +22,7 @@ PresentsProxy.Triggered:Connect(function(player)
     if Pres then
         local Path = Functions.PickRandom(DeliveryFolder)
         DeliveryEvent:FireClient(player,Path,Pres)
+        FactoryItems.PresentsInStock -= 1
     end
 end)
 
@@ -31,11 +33,12 @@ for _,v in pairs(DeliveryFolder:GetDescendants()) do --Setting up ProximityPromp
     end
 end
 
-DeliveryEvent.OnServerEvent:Connect(function(player,House) --When Player deliveres the Present
+DeliveryEvent.OnServerEvent:Connect(function(player,House,Pres) --When Player deliveres the Present
     local Distance = (player.Character.PrimaryPart.Position - House.Position).Magnitude
     if Distance <= 10 then
-    print(player.Name.." delivered present to "..House.Name.."!")
-    player.Currency.CandyCane.Value += 10
+        Pres.Value = false
+        print(player.Name.." delivered present to "..House.Name.."!")
+        player.Currency.CandyCane.Value += 10
     else
         player:Kick("Exploiting")
     end

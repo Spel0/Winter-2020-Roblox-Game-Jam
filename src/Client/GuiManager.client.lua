@@ -117,7 +117,8 @@ for i,v in ipairs(PresentsFrame:GetChildren()) do
 end
 
 for i,v in ipairs(PresentsFolder:GetChildren()) do
-    v.Changed:Connect(function()
+    v.Changed:Connect(function(value)
+        if value then
         for z,x in pairs(PresentsFrame:GetChildren()) do
             if x:IsA("ImageButton") then
                 local first = string.match(v.Name,"%d")
@@ -147,8 +148,15 @@ for i,v in ipairs(PresentsFolder:GetChildren()) do
                         end
                     end)
                 end
+            elseif x:IsA("ImageLabel") then
+                    local first = string.match(v.Name,"%d")
+                    local second = string.match(x.Name,"%d")
+                    if first == second then
+                        x:FindFirstChild("ItemBox"..second).PresentImage.Visible = true
+                end
             end
         end
+    end
     end)
     v.ChildRemoved:Connect(function()
         for z,x in pairs(PresentsFrame:GetChildren()) do
@@ -162,6 +170,12 @@ for i,v in ipairs(PresentsFolder:GetChildren()) do
                         BeamBool = false
                         Beam:Destroy()
                     end
+                end
+            elseif x:IsA("ImageLabel") then
+                local first = string.match(v.Name,"%d")
+                local second = string.match(x.Name,"%d")
+                if first == second then
+                    x:FindFirstChild("ItemBox"..second).PresentImage.Visible = false
                 end
             end
         end

@@ -1,5 +1,6 @@
 local RunService = game:GetService("RunService")
 local Drop = workspace["Workshop Area"]["Main Building"].LetterDrop
+local FactoryItems = require(game.ServerScriptService.FactoryItems)
 
 Drop.Touched:Connect(function() end)
 
@@ -18,6 +19,7 @@ while RunService.Heartbeat:Wait() do
                         Player.Character:FindFirstChild("Letter"):Destroy()
                     end
                     Player.Currency.CandyCane.Value += 2
+                    FactoryItems.LettersInStock += 1
                 end
             end
         end
