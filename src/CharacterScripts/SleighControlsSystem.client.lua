@@ -28,7 +28,7 @@ local function SpeedUp(actionName, inputState, inputObject) --Add Speed when pre
 		if time() - current >= 0.5 then
 			current = time()
 			if Acceleration.Value < Max.Value then
-				Acceleration.Value += 10
+				Acceleration.Value += 5 * Config.Multiplier.Value
 			end
 		end
 	until not HoldingW

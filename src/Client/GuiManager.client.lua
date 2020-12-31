@@ -1,10 +1,17 @@
 local Player = game:GetService("Players").LocalPlayer
+local Character = nil
+Player.CharacterAdded:Connect(function(char)
+    Character = char
+end)
+local CurrentCamera = workspace.CurrentCamera
 local Currency = Player:WaitForChild("Currency")
 local CandyCanes = Currency.CandyCane
-local Inventory = Player.Inventory
+local Inventory = Player:WaitForChild("Inventory")
+local SleighFolder = Inventory.OwnedSleigh
 local PresentsFolder = Inventory.Presents
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService('TweenService')
+local Info = TweenInfo.new(3,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut,0,false,0)
 local Gui = Player:WaitForChild("PlayerGui",math.huge)
 local InventoryGui = Gui:WaitForChild("InventoryGui")
 local InventoryFrame = InventoryGui.InventoryFrame
@@ -25,6 +32,7 @@ local CurrencyFrame = CurrencyGui.CurrencyFrame
 local CurrencyImage = CurrencyFrame.CurrencyImage
 local TextAmount = CurrencyImage.Amount
 
+local Signs = workspace.Signs
 
 local Open = false
 local InProgress = false
@@ -180,4 +188,85 @@ for i,v in ipairs(PresentsFolder:GetChildren()) do
             end
         end
     end)
+end
+
+for i,v in ipairs(SleighFolder:GetChildren()) do
+    if v.Value then
+        Signs:FindFirstChild("SleighSign"..i).Board.Proxy.ActionText = "Spawn"
+    end
+end
+    
+--Opening Sequence
+for i,v in ipairs(Gui:GetChildren()) do
+    v.Enabled = false
+end
+Gui.CutsceneGui.Enabled = true
+local CutsceneFrame = Gui.CutsceneGui.CutsceneFrame
+CutsceneFrame.ChooseSpawn.Visible = false
+CutsceneFrame.StartUp.Visible = true
+CurrentCamera.CameraType = Enum.CameraType.Scriptable
+CurrentCamera.CFrame = workspace.CutsceneStuff.Start.CFrame
+local Tween1 = TweenService:Create(CurrentCamera,Info,{CFrame = workspace.CutsceneStuff.End.CFrame})
+Tween1:Play()
+local Count = 1
+local CountArray = {UDim2.new(0.5,0,0.5,0),UDim2.new(-0.48,0,0.5,0),UDim2.new(-1.48,0,0.5,0),UDim2.new(-2.47,0,0.5,0),UDim2.new(-3.46,0,0.5,0)}
+local RolesArray = {"Letters","Constructor","Packer","Delivery","Villager"}
+CutsceneFrame.StartUp.PlayButton.MouseButton1Click:Connect(function()
+    if Tween1.PlaybackState == Enum.PlaybackState.Playing then
+        Tween1:Cancel()
+    end
+    CutsceneFrame.StartUp.Visible = false
+    CutsceneFrame.ChooseSpawn.Visible = true
+    CurrentCamera.CFrame = workspace.CutsceneStuff.Jobs.Letters.CFrame
+end)
+
+local Left = CutsceneFrame.ChooseSpawn.BG.ArrowLeft
+local Right = CutsceneFrame.ChooseSpawn.BG.ArrowRight
+local Scroll = CutsceneFrame.ChooseSpawn.BG.RoleBG.ScrollableFrame
+
+Right.MouseButton1Click:Connect(function()
+    if Count ~= #CountArray then
+        Left.Visible = true
+        Count += 1
+        if Count == #CountArray then
+            Right.Visible = false
+        end
+        Scroll.Position = CountArray[Count]
+        CurrentCamera.CFrame = workspace.CutsceneStuff.Jobs:FindFirstChild(RolesArray[Count]).CFrame
+    end
+end)
+
+Left.MouseButton1Click:Connect(function()
+    if Count ~= 1 then
+        Right.Visible = true
+        Count -= 1
+        if Count == 1 then
+            Left.Visible = false
+        end
+        Scroll.Position = CountArray[Count]
+        CurrentCamera.CFrame = workspace.CutsceneStuff.Jobs:FindFirstChild(RolesArray[Count]).CFrame
+    end
+end)
+
+CutsceneFrame.ChooseSpawn.StartPlaying.MouseButton1Click:Connect(function()
+    CurrentCamera.CameraType = Enum.CameraType.Custom
+    Character:SetPrimaryPartCFrame(workspace.Spawns:FindFirstChild(RolesArray[Count]).CFrame)
+    CutsceneFrame.ChooseSpawn.Visible = false
+    CurrencyGui.Enabled = true
+    InventoryGui.Enabled = true
+end)
+
+while CutsceneFrame.StartUp.Visible do
+    for i = 1,10 do
+        RunService.Heartbeat:Wait()
+        CutsceneFrame.StartUp.Work.Rotation = i
+    end
+    for i = 10,-10,-1 do
+        RunService.Heartbeat:Wait()
+        CutsceneFrame.StartUp.Work.Rotation = i
+    end
+    for i = -10,1 do
+        RunService.Heartbeat:Wait()
+        CutsceneFrame.StartUp.Work.Rotation = i
+    end
 end

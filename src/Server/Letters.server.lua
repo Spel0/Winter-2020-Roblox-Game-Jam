@@ -1,6 +1,8 @@
 local RunService = game:GetService("RunService")
+local RepStorage = game.ReplicatedStorage
 local Drop = workspace["Workshop Area"]["Main Building"].LetterDrop
 local FactoryItems = require(game.ServerScriptService.FactoryItems)
+local BeamEvent = RepStorage.Remotes.BeamEvent
 
 Drop.Touched:Connect(function() end)
 
@@ -18,6 +20,7 @@ while RunService.Heartbeat:Wait() do
                     else
                         Player.Character:FindFirstChild("Letter"):Destroy()
                     end
+                    BeamEvent:FireClient(Player,nil,true)
                     Player.Currency.CandyCane.Value += 2
                     FactoryItems.LettersInStock += 1
                 end
