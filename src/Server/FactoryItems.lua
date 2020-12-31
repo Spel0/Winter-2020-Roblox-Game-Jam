@@ -47,6 +47,7 @@ function module.StartProduction()
                     local NewProxy = Instance.new("ProximityPrompt")
                     NewProxy.ObjectText = "Completed Toy"
                     NewProxy.ActionText = "Grab to Wrap a Toy!"
+                    NewProxy.RequiresLineOfSight = false
                     NewProxy.Parent = ClonedToy
                     NewProxy.Triggered:Connect(function(player)
                         if not player.HasToyForWrap.Value then

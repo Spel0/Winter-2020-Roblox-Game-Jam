@@ -10,11 +10,12 @@ NPCFolder.ChildAdded:Connect(function(NPC)
     Proxy.HoldDuration = 0.5
     Proxy.ObjectText = "Villager"
     Proxy.ActionText = "Accept a Letter!"
+    Proxy.RequiresLineOfSight = false
     local ProxyPart = Instance.new("Part")
     ProxyPart.Anchored = true
     ProxyPart.Transparency = 1
     ProxyPart.CanCollide = false
-    ProxyPart.CFrame = NPC.PrimaryPart.CFrame * CFrame.new(0,0,-1)  
+    ProxyPart.CFrame = NPC.PrimaryPart.CFrame * CFrame.new(0,0,0)  
     ProxyPart.Parent = NPC
     Proxy.Parent = ProxyPart
     Proxy.Triggered:Connect(function(player)
