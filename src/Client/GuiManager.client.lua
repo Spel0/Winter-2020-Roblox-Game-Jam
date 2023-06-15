@@ -1,6 +1,15 @@
+--[[
+    GuiManager.client.lua
+    Created for the 2020 Winter Roblox Game Jam
+    Handles the game UI system
+]]--
+
+--[[ 
+    Setting up local variables
+]]--
 local Player = game:GetService("Players").LocalPlayer
 local Character = nil
-Player.CharacterAdded:Connect(function(char)
+Player.CharacterAdded:Connect(function(char) --Keep track of character
     Character = char
 end)
 local CurrentCamera = workspace.CurrentCamera
@@ -41,9 +50,12 @@ local Change = nil
 local BeamBool = false
 
 
+--[[
+    Main part of the script, setups up event connections and changes UI for the player that is joining
+]]--
 InventoryFrame.Position = UDim2.new(1,0,0.5,0)
 
-InventoryButton.MouseButton1Click:Connect(function()
+InventoryButton.MouseButton1Click:Connect(function() --Inventory UI event
         if not Open and not InProgress then
             InventoryFrame.Visible = true
             Open = true
@@ -71,6 +83,7 @@ for i,v in ipairs(Tabs) do
     end
 end
 
+--Inventory tab changing
 RightArrow.MouseButton1Click:Connect(function()
     if FrameCounter.Value ~= 1 and not TabChangeInProgress then
         FrameCounter.Value -= 1
@@ -111,6 +124,7 @@ FrameCounter.Changed:Connect(function()
 end
 end)
 
+--Setting up currency UI
 RunService.Heartbeat:Wait()
 TextAmount.Text = CandyCanes.Value
 
@@ -118,6 +132,7 @@ CandyCanes.Changed:Connect(function()
     TextAmount.Text = CandyCanes.Value
 end)
 
+--Setting up Inventory Presents UI
 for i,v in ipairs(PresentsFrame:GetChildren()) do
     if v:IsA("ImageButton") then
         v.Visible = false
@@ -125,14 +140,16 @@ for i,v in ipairs(PresentsFrame:GetChildren()) do
 end
 
 for i,v in ipairs(PresentsFolder:GetChildren()) do
+    --Present UI got changed
     v.Changed:Connect(function(value)
         if value then
         for z,x in pairs(PresentsFrame:GetChildren()) do
-            if x:IsA("ImageButton") then
+            if x:IsA("ImageButton") then --Active present
                 local first = string.match(v.Name,"%d")
                 local second = string.match(x.Name,"%d")
                 if first == second then
                     x.Visible = true
+                    --Chose present to deliver/cancel the delivery
                     x.MouseButton1Click:Connect(function()
                         if not BeamBool then
                             BeamBool = true
@@ -156,7 +173,7 @@ for i,v in ipairs(PresentsFolder:GetChildren()) do
                         end
                     end)
                 end
-            elseif x:IsA("ImageLabel") then
+            elseif x:IsA("ImageLabel") then --Inactive/No present
                     local first = string.match(v.Name,"%d")
                     local second = string.match(x.Name,"%d")
                     if first == second then
@@ -166,9 +183,10 @@ for i,v in ipairs(PresentsFolder:GetChildren()) do
         end
     end
     end)
+    --Present removed
     v.ChildRemoved:Connect(function()
         for z,x in pairs(PresentsFrame:GetChildren()) do
-            if x:IsA("ImageButton") then
+            if x:IsA("ImageButton") then --Was active present
                 local first = string.match(v.Name,"%d")
                 local second = string.match(x.Name,"%d")
                 if first == second then
@@ -179,7 +197,7 @@ for i,v in ipairs(PresentsFolder:GetChildren()) do
                         Beam:Destroy()
                     end
                 end
-            elseif x:IsA("ImageLabel") then
+            elseif x:IsA("ImageLabel") then --Was not an active present
                 local first = string.match(v.Name,"%d")
                 local second = string.match(x.Name,"%d")
                 if first == second then
@@ -190,6 +208,7 @@ for i,v in ipairs(PresentsFolder:GetChildren()) do
     end)
 end
 
+--Setting up Sleigh Button Prompt
 for i,v in ipairs(SleighFolder:GetChildren()) do
     if v.Value then
         Signs:FindFirstChild("SleighSign"..i).Board.Proxy.ActionText = "Spawn"
@@ -211,7 +230,7 @@ Tween1:Play()
 local Count = 1
 local CountArray = {UDim2.new(0.5,0,0.5,0),UDim2.new(-0.48,0,0.5,0),UDim2.new(-1.48,0,0.5,0),UDim2.new(-2.47,0,0.5,0),UDim2.new(-3.46,0,0.5,0)}
 local RolesArray = {"Letters","Constructor","Packer","Delivery","Villager"}
-CutsceneFrame.StartUp.PlayButton.MouseButton1Click:Connect(function()
+CutsceneFrame.StartUp.PlayButton.MouseButton1Click:Connect(function() --Pressed Play on the start screen
     if Tween1.PlaybackState == Enum.PlaybackState.Playing then
         Tween1:Cancel()
     end
@@ -224,6 +243,7 @@ local Left = CutsceneFrame.ChooseSpawn.BG.ArrowLeft
 local Right = CutsceneFrame.ChooseSpawn.BG.ArrowRight
 local Scroll = CutsceneFrame.ChooseSpawn.BG.RoleBG.ScrollableFrame
 
+--Team change event UI
 Right.MouseButton1Click:Connect(function()
     if Count ~= #CountArray then
         Left.Visible = true
@@ -248,6 +268,7 @@ Left.MouseButton1Click:Connect(function()
     end
 end)
 
+--Team chosen
 CutsceneFrame.ChooseSpawn.StartPlaying.MouseButton1Click:Connect(function()
     CurrentCamera.CameraType = Enum.CameraType.Custom
     Character:SetPrimaryPartCFrame(workspace.Spawns:FindFirstChild(RolesArray[Count]).CFrame)
@@ -256,6 +277,7 @@ CutsceneFrame.ChooseSpawn.StartPlaying.MouseButton1Click:Connect(function()
     InventoryGui.Enabled = true
 end)
 
+--Shaky logo at startup
 while CutsceneFrame.StartUp.Visible do
     for i = 1,10 do
         RunService.Heartbeat:Wait()
